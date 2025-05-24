@@ -1,22 +1,17 @@
 package com.bookstore.authorservice.entity;
 
+import com.bookstore.authorservice.entity.core.FlagableAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Data
 @Table(name = "Authors", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class Author {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
-
+public class Author extends FlagableAuditableEntity {
     @NotBlank
     private String firstName;
 

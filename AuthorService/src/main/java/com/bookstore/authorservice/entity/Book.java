@@ -1,20 +1,18 @@
 package com.bookstore.authorservice.entity;
 
+import com.bookstore.authorservice.entity.core.FlagableAuditableEntity;
+import com.bookstore.authorservice.enums.Genre;
+import com.bookstore.authorservice.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@Entity
 @Data
 @Table(name = "books")
-public class Book {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class Book extends FlagableAuditableEntity {
 
     @ManyToMany
     @JoinTable(
@@ -27,16 +25,12 @@ public class Book {
     @NotBlank
     private String title;
 
-    private String genre;
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
 
     @Column(length = 2000)
     private String synopsis;
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.DRAFT;
-
-    public enum Status {
-        DRAFT,
-        PUBLISHED
-    }
 }
