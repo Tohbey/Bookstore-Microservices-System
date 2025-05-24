@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Data
 @Table(name = "books")
+@Entity
 public class Book extends FlagableAuditableEntity {
 
     @ManyToMany
