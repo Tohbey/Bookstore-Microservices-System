@@ -11,7 +11,7 @@ public interface DataResponse<M> {
 
     void setData(List<M> data);
 
-    List<String> getMessages();
+    String getMessage();
 
-    void setMessages(List<String> messages);
+    void setMessage(String message);
 }

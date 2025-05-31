@@ -95,12 +95,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDTO> getAllBooks(Flag flag, List<Long> authorIds) {
-        logger.info("fetching books {} or {}", flag, authorIds);
+    public List<BookDTO> getAllBooks(List<Long> authorIds) {
+        logger.info("fetching books by {}", authorIds);
         List<Book> books;
         List<BookDTO> bookDTOs = new ArrayList<>();
         if (authorIds == null || authorIds.isEmpty()) {
-            books = bookRepository.findAllByFlag(flag);
+            books = bookRepository.findAllByFlag(Flag.ENABLED);
         }else{
             List<Author> authors = authorRepository.findAllByIdIn(authorIds);
             books = bookRepository.findAllByAuthorsAndFlag(authors, Flag.ENABLED);
@@ -126,5 +126,19 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDTO publishBook(PublishDto publishDto) {
         return null;
+    }
+
+    @Override
+    public BookDTO deleteBook(Long bookId) {
+        logger.info("Deleting book details {}", bookId);
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RecordNotFoundException("Book Not Found "+bookId));
+
+        book.setFlag(Flag.DISABLED);
+
+        book = bookRepository.save(book);
+
+        return bookMapper.bookToBookDTO(book);
     }
 }

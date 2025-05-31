@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -129,6 +128,9 @@ class BookServiceImplTest {
         assertEquals(publishedDate, updateBook.getPublishedAt());
         assertEquals(1, bookDTO.getAuthors().size());
         assertEquals(getAuthorDTOs().get(0).getId(), bookDTO.getAuthors().get(0).getId());
+        verify(bookRepository).findById(bookId);
+        verify(authorRepository).findAllByIdIn(anyList());
+        verify(bookRepository).save(any(Book.class));
     }
 
     @Test
@@ -183,7 +185,7 @@ class BookServiceImplTest {
                 .thenAnswer(invocation -> expectedBookDTOs.get(index.getAndIncrement()));
 
         //when
-        List<BookDTO> result = bookService.getAllBooks(Flag.ENABLED, authorIds);
+        List<BookDTO> result = bookService.getAllBooks(authorIds);
 
         //then
         assertNotNull(result);
@@ -205,7 +207,7 @@ class BookServiceImplTest {
         when(bookMapper.bookToBookDTO(any(Book.class)))
                 .thenAnswer(invocation -> expectedBookDTOs.get(index.getAndIncrement()));
         //when
-        List<BookDTO> result = bookService.getAllBooks(Flag.ENABLED, authorIds);
+        List<BookDTO> result = bookService.getAllBooks(authorIds);
 
         //then
         assertNotNull(result);
@@ -234,10 +236,50 @@ class BookServiceImplTest {
         assertEquals(Status.REVIEW, result.getStatus());
         assertEquals(1, result.getAuthors().size());
         assertEquals(getAuthorDTOs().get(0), result.getAuthors().get(0));
+        verify(bookRepository).findById(bookId);
     }
 
     @Test
     void getBookById_recordNotFound() {
+        // Given
+        Long bookId = 1L;
+        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        //when
+        RecordNotFoundException exception = assertThrows(
+                RecordNotFoundException.class, () -> bookService.getBookById(bookId));
+
+        assertNotNull(exception);
+        assertEquals("Book Not Found 1", exception.getMessage());
+        verify(bookRepository).findById(bookId);
+        verifyNoInteractions(bookMapper);
+    }
+
+    @Test
+    void getDeleteById() {
+        // Given
+        Long bookId = 1L;
+        Book book = getBooks().get(0);
+        BookDTO bookDTO = getBookDTOs().get(0);
+        bookDTO.setFlag(Flag.DISABLED);
+
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        when(bookMapper.bookToBookDTO(book)).thenReturn(bookDTO);
+        when(bookRepository.save(any(Book.class))).thenReturn(book);
+
+        //when
+        BookDTO result = bookService.deleteBook(bookId);
+
+        //then
+        assertNotNull(result);
+        assertEquals(bookId, result.getId());
+        assertEquals(Flag.DISABLED, result.getFlag());
+        verify(bookRepository).findById(bookId);
+        verify(bookRepository).save(any(Book.class));
+    }
+
+    @Test
+    void getDeleteById_recordNotFound() {
         // Given
         Long bookId = 1L;
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
