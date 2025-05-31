@@ -4,7 +4,7 @@ import com.bookstore.authorservice.enums.Flag;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
@@ -15,9 +15,9 @@ public abstract class BaseDTO {
 
     private String createdBy;
 
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     private String lastModifiedBy;
 
-    private Date lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 }

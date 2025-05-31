@@ -11,7 +11,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
@@ -32,7 +32,7 @@ public class AuditableEntity extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonIgnore
     @Audited
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @Getter
     @Setter
@@ -50,5 +50,5 @@ public class AuditableEntity extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonIgnore
     @Audited
-    private Date lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 }

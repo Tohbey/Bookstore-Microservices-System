@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,5 +66,15 @@ class AuthorRepositoryTest {
         assertThat(authorOptional).isPresent();
         assertThat(authorOptional.get().getEmail()).isEqualTo("john@example.com");
         assertThat(authorOptional.get().getFlag()).isEqualTo(Flag.ENABLED);
+    }
+
+    @Test
+    void findAllByIdIn(){
+        List<Long> authorIds = Arrays.asList(1L, 2L);
+        List<Author> authors = authorRepository.findAllByIdIn(authorIds);
+
+        assertThat(authors.size()).isEqualTo(2);
+        assertThat(authors.get(0).getEmail()).isEqualTo("john@example.com");
+        assertThat(authors.get(1).getEmail()).isEqualTo("tems@example.com");
     }
 }
