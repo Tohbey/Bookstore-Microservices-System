@@ -16,6 +16,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bookstore.authorservice.mock.MockData.getAuthorDTOs;
+import static com.bookstore.authorservice.mock.MockData.getAuthors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -39,17 +41,8 @@ class AuthorServiceImplTest {
     void getAuthorById() {
         //Given
         Long authorId = 1L;
-        Author author = new Author();
-        author.setId(authorId);
-        author.setFirstName("John");
-        author.setLastName("Doe");
-        author.setEmail("john.doe@gmail.com");
-
-        AuthorDTO authorDTO = new AuthorDTO();
-        authorDTO.setId(authorId);
-        authorDTO.setFirstName("John");
-        authorDTO.setLastName("Doe");
-        authorDTO.setEmail("john.doe@gmail.com");
+        Author author = getAuthors().get(0);
+        AuthorDTO authorDTO = getAuthorDTOs().get(0);
 
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
         when(authorMapper.authorToAuthorDTO(author)).thenReturn(authorDTO);
@@ -86,18 +79,10 @@ class AuthorServiceImplTest {
     @Test
     void createAuthor() {
         //Given
-        Author author = new Author();
-        author.setFirstName("John");
-        author.setLastName("Doe");
-        author.setEmail("john.doe@gmail.com");
-        author.setFlag(Flag.ENABLED);
-
-        AuthorDTO authorDTO = new AuthorDTO();
-        authorDTO.setFirstName("John");
-        authorDTO.setLastName("Doe");
-        authorDTO.setEmail("john.doe@gmail.com");
-        authorDTO.setFlag(Flag.ENABLED);
-
+        Author author = getAuthors().get(0);
+        author.setId(null);
+        AuthorDTO authorDTO = getAuthorDTOs().get(0);
+        authorDTO.setId(null);
 
         when(authorRepository.findByEmail(any())).thenReturn(Optional.empty());
         when(authorMapper.authorDTOToAuthor(authorDTO)).thenReturn(author);
@@ -110,7 +95,7 @@ class AuthorServiceImplTest {
         //then
         assertEquals(authorDTO.getFirstName(), result.getFirstName());
         assertEquals(authorDTO.getLastName(), result.getLastName());
-        assertEquals(result.getFlag(), Flag.ENABLED);
+        assertEquals(Flag.ENABLED, result.getFlag());
 
         verify(authorRepository).findByEmail(any());
         verify(authorMapper).authorDTOToAuthor(authorDTO);
@@ -121,18 +106,8 @@ class AuthorServiceImplTest {
     @Test
     void createAuthor_whenAuthorEmailDoesExist_throwsException() {
         //Given
-        Author author = new Author();
-        author.setFirstName("John");
-        author.setLastName("Doe");
-        author.setEmail("john.doe@gmail.com");
-        author.setFlag(Flag.ENABLED);
-
-        AuthorDTO authorDTO = new AuthorDTO();
-        authorDTO.setFirstName("John");
-        authorDTO.setLastName("Doe");
-        authorDTO.setEmail("john.doe@gmail.com");
-        authorDTO.setFlag(Flag.ENABLED);
-
+        Author author = getAuthors().get(0);
+        AuthorDTO authorDTO = getAuthorDTOs().get(0);
 
         when(authorRepository.findByEmail(any())).thenReturn(Optional.of(author));
 
@@ -154,36 +129,19 @@ class AuthorServiceImplTest {
         // Given
         Long authorId = 1L;
 
-        Author existingAuthor = new Author();
-        existingAuthor.setId(authorId);
-        existingAuthor.setFirstName("Old");
-        existingAuthor.setLastName("Name");
-        existingAuthor.setEmail("old@example.com");
-        existingAuthor.setBio("Old bio");
-        existingAuthor.setFlag(Flag.ENABLED);
+        Author existingAuthor = getAuthors().get(0);
 
-        AuthorDTO updateDTO = new AuthorDTO();
-        updateDTO.setFirstName("New");
-        updateDTO.setLastName("Name");
-        updateDTO.setEmail("new@example.com");
-        updateDTO.setBio("Updated bio");
-        updateDTO.setFlag(Flag.ENABLED);
+        AuthorDTO updateDTO = getAuthorDTOs().get(0);
 
-        Author updatedAuthor = new Author();
-        updatedAuthor.setId(authorId);
-        updatedAuthor.setFirstName("New");
-        updatedAuthor.setLastName("Name");
+        Author updatedAuthor = getAuthors().get(0);
         updatedAuthor.setEmail("new@example.com");
         updatedAuthor.setBio("Updated bio");
-        updatedAuthor.setFlag(Flag.ENABLED);
+        updatedAuthor.setFirstName("New");
 
-        AuthorDTO expectedDTO = new AuthorDTO();
-        expectedDTO.setId(authorId);
-        expectedDTO.setFirstName("New");
-        expectedDTO.setLastName("Name");
+        AuthorDTO expectedDTO = getAuthorDTOs().get(0);
         expectedDTO.setEmail("new@example.com");
         expectedDTO.setBio("Updated bio");
-        expectedDTO.setFlag(Flag.ENABLED);
+        expectedDTO.setFirstName("New");
 
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(existingAuthor));
         when(authorRepository.save(any(Author.class))).thenReturn(updatedAuthor);
@@ -220,38 +178,11 @@ class AuthorServiceImplTest {
     }
     @Test
     void getAllAuthors() {
-        Author author = new Author();
-        author.setId(1L);
-        author.setFirstName("John");
-        author.setLastName("Doe");
-        author.setEmail("john.doe@gmail.com");
-        author.setFlag(Flag.ENABLED);
-
-        Author author1 = new Author();
-        author1.setId(2L);
-        author1.setFirstName("Johnson");
-        author1.setLastName("Does");
-        author1.setEmail("johnson.doe@gmail.com");
-        author1.setFlag(Flag.ENABLED);
-
-        AuthorDTO authorDTO = new AuthorDTO();
-        authorDTO.setId(1L);
-        authorDTO.setFirstName("John");
-        authorDTO.setLastName("Doe");
-        authorDTO.setEmail("john.doe@gmail.com");
-        authorDTO.setFlag(Flag.ENABLED);
-
-        AuthorDTO authorDTO1 = new AuthorDTO();
-        authorDTO1.setId(2L);
-        authorDTO1.setFirstName("Johnson");
-        authorDTO1.setLastName("Does");
-        authorDTO1.setEmail("johnson.doe@gmail.com");
-        authorDTO1.setFlag(Flag.ENABLED);
-
-        List<Author> authors = List.of(author, author1);
+        List<Author> authors = getAuthors();
+        List<AuthorDTO> authorDTOs = getAuthorDTOs();
         when(authorRepository.findAllByFlag(Flag.ENABLED)).thenReturn(authors);
-        when(authorMapper.authorToAuthorDTO(author)).thenReturn(authorDTO);
-        when(authorMapper.authorToAuthorDTO(author1)).thenReturn(authorDTO1);
+        when(authorMapper.authorToAuthorDTO(authors.get(0))).thenReturn(authorDTOs.get(0));
+        when(authorMapper.authorToAuthorDTO(authors.get(1))).thenReturn(authorDTOs.get(1));
 
         //when
         List<AuthorDTO> result = authorService.getAllAuthors();
@@ -259,10 +190,10 @@ class AuthorServiceImplTest {
         //then
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(authorDTO.getId(), result.get(0).getId());
-        assertEquals(authorDTO, result.get(0));
-        assertEquals(authorDTO1, result.get(1));
-        assertEquals(authorDTO1, result.get(1));
+        assertEquals(authorDTOs.get(0).getId(), result.get(0).getId());
+        assertEquals(authorDTOs.get(0), result.get(0));
+        assertEquals(authorDTOs.get(1), result.get(1));
+        assertEquals(authorDTOs.get(1), result.get(1));
 
         verify(authorRepository).findAllByFlag(Flag.ENABLED);
         verify(authorMapper, times(2)).authorToAuthorDTO(any());

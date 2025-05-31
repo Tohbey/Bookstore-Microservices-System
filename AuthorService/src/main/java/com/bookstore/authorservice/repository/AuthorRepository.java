@@ -14,4 +14,6 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findAllByFlag(Flag flag);
 
     Optional<Author> findByEmail(String email);
+
+    List<Author> findAllByIdIn(List<Long> ids);
 }
