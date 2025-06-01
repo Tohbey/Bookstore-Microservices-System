@@ -2,7 +2,12 @@ package com.bookstore.authorservice.entity.core;
 
 import com.bookstore.authorservice.enums.Flag;
 import com.bookstore.authorservice.model.Flagable;
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import org.hibernate.envers.Audited;
 

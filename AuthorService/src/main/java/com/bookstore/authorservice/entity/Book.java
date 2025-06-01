@@ -3,9 +3,16 @@ package com.bookstore.authorservice.entity;
 import com.bookstore.authorservice.entity.core.FlagableAuditableEntity;
 import com.bookstore.authorservice.enums.Genre;
 import com.bookstore.authorservice.enums.Status;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
