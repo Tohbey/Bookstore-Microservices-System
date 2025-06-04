@@ -84,4 +84,18 @@ public class AuthorServiceImpl implements AuthorService {
 
         return authorDTOs;
     }
+
+    @Override
+    public AuthorDTO deleteAuthor(Long authorId) {
+        logger.info("deleting author details {}", authorId);
+
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new RecordNotFoundException("Author Not Found "+authorId));
+
+        author.setFlag(Flag.DISABLED);
+
+        author = authorRepository.save(author);
+
+        return authorMapper.authorToAuthorDTO(author);
+    }
 }

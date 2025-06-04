@@ -13,13 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class AuthorRepositoryTest {
 
     @Autowired
     private AuthorRepository authorRepository;
+    private Author author1;
+    private Author author2;
 
     @BeforeEach
     void setUp() {
@@ -41,8 +42,8 @@ class AuthorRepositoryTest {
         inactiveAuthor.setEmail("jane@example.com");
         inactiveAuthor.setFlag(Flag.DISABLED);
 
-        authorRepository.save(activeAuthor);
-        authorRepository.save(activeAuthor2);
+        author1 = authorRepository.save(activeAuthor);
+        author2 = authorRepository.save(activeAuthor2);
         authorRepository.save(inactiveAuthor);
     }
 
@@ -70,7 +71,7 @@ class AuthorRepositoryTest {
 
     @Test
     void findAllByIdIn(){
-        List<Long> authorIds = Arrays.asList(1L, 2L);
+        List<Long> authorIds = Arrays.asList(author1.getId(), author2.getId());
         List<Author> authors = authorRepository.findAllByIdIn(authorIds);
 
         assertThat(authors.size()).isEqualTo(2);

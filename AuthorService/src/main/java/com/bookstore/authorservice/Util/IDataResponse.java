@@ -16,7 +16,7 @@ public class IDataResponse<M> implements DataResponse<M> {
 
     private boolean valid;
     private List<M> data;
-    private List<String> messages;
+    private String message;
 
     public IDataResponse(boolean valid) {
         this.valid = valid;
@@ -24,6 +24,6 @@ public class IDataResponse<M> implements DataResponse<M> {
 
     public IDataResponse(HttpStatus status, String message){
         this.valid = status.is2xxSuccessful();
-        this.messages = Collections.singletonList(message);
+        this.message = message;
     }
 }

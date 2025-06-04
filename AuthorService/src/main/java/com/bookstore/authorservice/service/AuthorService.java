@@ -13,4 +13,5 @@ public interface AuthorService {
 
     List<AuthorDTO> getAllAuthors();
 
+    AuthorDTO deleteAuthor(Long authorId);
 }

@@ -18,8 +18,15 @@ import java.util.Optional;
 
 import static com.bookstore.authorservice.mock.MockData.getAuthorDTOs;
 import static com.bookstore.authorservice.mock.MockData.getAuthors;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 class AuthorServiceImplTest {
 
@@ -197,5 +204,44 @@ class AuthorServiceImplTest {
 
         verify(authorRepository).findAllByFlag(Flag.ENABLED);
         verify(authorMapper, times(2)).authorToAuthorDTO(any());
+    }
+
+    @Test
+    void deleteAuthor() {
+        //Given
+        Long authorId = 1L;
+        Author author = getAuthors().get(0);
+        AuthorDTO authorDTO = getAuthorDTOs().get(0);
+        authorDTO.setFlag(Flag.DISABLED);
+
+        when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
+        when(authorMapper.authorToAuthorDTO(author)).thenReturn(authorDTO);
+        when(authorRepository.save(any(Author.class))).thenReturn(author);
+
+        //when
+        AuthorDTO result = authorService.deleteAuthor(authorId);
+
+        //then
+        assertNotNull(result);
+        assertEquals(authorId, result.getId());
+        assertEquals(Flag.DISABLED, result.getFlag());
+        verify(authorRepository).findById(authorId);
+        verify(authorMapper).authorToAuthorDTO(author);
+    }
+
+    @Test
+    void deleteAuthor_whenAuthorDoesNotExist_throwsException() {
+        //given
+        Long authorId = 1L;
+        when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
+
+        //when
+        RecordNotFoundException exception = assertThrows(
+                RecordNotFoundException.class, () -> authorService.deleteAuthor(authorId));
+
+        assertNotNull(exception);
+        assertEquals("Author Not Found 1", exception.getMessage());
+        verify(authorRepository).findById(authorId);
+        verifyNoInteractions(authorMapper);
     }
 }
