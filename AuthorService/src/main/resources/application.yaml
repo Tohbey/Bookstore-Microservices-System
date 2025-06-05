@@ -1,6 +1,17 @@
 spring:
   application:
     name:AuthorService
+  datasource:
+    url: jdbc:mysql://localhost/author_schema
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 server:
   port: 8100
