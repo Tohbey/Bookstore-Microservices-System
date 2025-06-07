@@ -1,25 +1,31 @@
 package com.bookstore.authorservice.service.impl;
 
+import com.bookstore.authorservice.config.MessageProducer;
+import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.entity.Book;
 import com.bookstore.authorservice.enums.Flag;
 import com.bookstore.authorservice.enums.Status;
 import com.bookstore.authorservice.exception.RecordNotFoundException;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
-import com.bookstore.authorservice.mapper.mappers.AuthorMapper;
 import com.bookstore.authorservice.mapper.mappers.BookMapper;
 import com.bookstore.authorservice.repository.AuthorRepository;
 import com.bookstore.authorservice.repository.BookRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.bookstore.authorservice.config.KafkaTopics.BOOK_PUBLISHED;
 import static com.bookstore.authorservice.mock.MockData.getAuthorDTOs;
 import static com.bookstore.authorservice.mock.MockData.getAuthors;
 import static com.bookstore.authorservice.mock.MockData.getBookDTOs;
@@ -27,10 +33,13 @@ import static com.bookstore.authorservice.mock.MockData.getBooks;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 class BookServiceImplTest {
@@ -45,16 +54,18 @@ class BookServiceImplTest {
     private AuthorRepository authorRepository;
 
     @Mock
-    private BookMapper bookMapper;
+    private MessageProducer messageProducer;
 
     @Mock
-    private AuthorMapper authorMapper;
+    private BookMapper bookMapper;
 
-    Long authorId = 1L;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        objectMapper.registerModule(new JavaTimeModule());
+        ReflectionTestUtils.setField(bookService, "objectMapper", objectMapper);
     }
 
     @Test
@@ -301,6 +312,74 @@ class BookServiceImplTest {
     }
 
     @Test
-    void publishBook() {
+    void testPublishBook_Success() throws JsonProcessingException {
+        BookDTO bookDTO = getBookDTOs().get(0);
+
+        PublishDto publishDto = new PublishDto();
+        publishDto.setBookDTO(bookDTO);
+        publishDto.setPublishedCopies(20);
+
+        Book existingBook = getBooks().get(0);
+
+        Book savedBook = getBooks().get(0);
+        savedBook.setStatus(Status.PUBLISHED);
+        savedBook.setPublishedAt(LocalDateTime.now());
+
+        BookDTO savedBookDTO = getBookDTOs().get(0);
+        savedBookDTO.setStatus(Status.PUBLISHED);
+        savedBookDTO.setPublishedAt(LocalDateTime.now());
+
+        when(bookRepository.findById(bookDTO.getId())).thenReturn(Optional.of(existingBook));
+        when(bookRepository.save(any(Book.class))).thenReturn(savedBook);
+        when(bookMapper.bookToBookDTO(savedBook)).thenReturn(savedBookDTO);
+
+        BookDTO expectedBookDTO = bookService.publishBook(publishDto);
+
+        // Assert
+        assertEquals(80, publishDto.getRemainingCopies());
+        assertEquals(expectedBookDTO, savedBookDTO);
+        verify(bookRepository).findById(bookDTO.getId());
+        verify(bookRepository).save(any(Book.class));
+        verify(messageProducer).sendMessage(eq(BOOK_PUBLISHED), anyString());
+    }
+
+    @Test
+    void testPublishBook_BookNotFound_ThrowsException() {
+        PublishDto publishDto = new PublishDto();
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setId(1L);
+        publishDto.setBookDTO(bookDTO);
+
+        when(bookRepository.findById(1L)).thenReturn(Optional.empty());
+
+        RecordNotFoundException ex = assertThrows(RecordNotFoundException.class, () -> {
+            bookService.publishBook(publishDto);
+        });
+
+        assertEquals("Book Not Found 1", ex.getMessage());
+        verify(bookRepository).findById(1L);
+        verifyNoMoreInteractions(bookRepository, bookMapper, messageProducer);
+    }
+
+    @Test
+    void testPublishBook_InsufficientCopies_ThrowsRuntimeException() {
+        BookDTO bookDTO = getBookDTOs().get(0);
+
+        PublishDto publishDto = new PublishDto();
+        publishDto.setBookDTO(bookDTO);
+        publishDto.setPublishedCopies(120);
+
+        Book book = getBooks().get(0);
+
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+
+        // Act & Assert
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            bookService.publishBook(publishDto);
+        });
+
+        assertEquals("Not enough copies available", ex.getMessage());
+        verify(bookRepository).findById(1L);
+        verifyNoMoreInteractions(bookRepository, bookMapper, messageProducer);
     }
 }

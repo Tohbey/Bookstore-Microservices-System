@@ -46,5 +46,6 @@ public class Book extends FlagableAuditableEntity {
     private LocalDateTime publishedAt;
     private String isbn;
     private String edition;
+    private Integer totalCopies;
     private BigDecimal suggestedRetailPrice;
 }

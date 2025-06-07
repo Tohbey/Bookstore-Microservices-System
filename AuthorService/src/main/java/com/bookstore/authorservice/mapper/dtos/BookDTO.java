@@ -18,5 +18,6 @@ public class BookDTO extends BaseDTO {
     private LocalDateTime publishedAt;
     private String isbn;
     private String edition;
+    private Integer totalCopies;
     private BigDecimal suggestedRetailPrice;
 }

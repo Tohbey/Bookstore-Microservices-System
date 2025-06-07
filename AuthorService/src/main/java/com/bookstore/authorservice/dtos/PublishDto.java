@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class PublishDto {
     private BookDTO bookDTO;
-    private Integer availableCopies;
-    private Integer totalCopies;
+    private Integer publishedCopies;
+    private Integer remainingCopies;
 }
