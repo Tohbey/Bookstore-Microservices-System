@@ -3,8 +3,8 @@ spring:
     name:AuthorService
   datasource:
     url: jdbc:mysql://localhost/author_schema
-    username:
-    password:
+    username: root
+    password: macbookair
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
@@ -12,6 +12,10 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-group-id
 
 server:
   port: 8100

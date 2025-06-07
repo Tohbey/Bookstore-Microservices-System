@@ -1,6 +1,7 @@
 package com.bookstore.authorservice.controller;
 
 import com.bookstore.authorservice.Util.IDataResponse;
+import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
 import com.bookstore.authorservice.service.BookService;
 import org.slf4j.Logger;
@@ -66,6 +67,16 @@ public class BookController {
         response.setData(bookService.getAllBooks(authorIds));
         response.setValid(true);
         response.setMessage("Books retrieved successfully");
+        return response;
+    }
+
+    @PostMapping(value = "publish")
+    public IDataResponse<BookDTO> publishBook(@RequestBody PublishDto publishDto) {
+        logger.info("Publishing book details");
+        IDataResponse<BookDTO> response = new IDataResponse<>();
+        response.setData(List.of(bookService.publishBook(publishDto)));
+        response.setValid(true);
+        response.setMessage("Book published successfully");
         return response;
     }
 

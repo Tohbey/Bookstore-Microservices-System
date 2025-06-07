@@ -1,5 +1,6 @@
 package com.bookstore.authorservice.controller;
 
+import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.enums.Flag;
 import com.bookstore.authorservice.exception.RecordNotFoundException;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
@@ -258,4 +259,61 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.data").doesNotExist());
     }
 
+    @Test
+    void publishBook_shouldReturnSuccess() throws Exception {
+        PublishDto publishDto = new PublishDto();
+        publishDto.setBookDTO(getBookDTOs().get(0));
+        publishDto.setPublishedCopies(10);
+
+
+        when(bookService.publishBook(publishDto)).thenReturn(getBookDTOs().get(0));
+
+        mockMvc.perform(
+                        post(BookController.BASE_URL+"/publish")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(publishDto)))
+                .andExpect(jsonPath("$.valid").value(true))
+                .andExpect(jsonPath("$.message").value("Book published successfully"))
+                .andExpect(jsonPath("$.data[0]").isNotEmpty());
+    }
+
+    @Test
+    void publishBook_shouldReturnNotFound_whenServiceThrowsRecordNotFoundException() throws Exception {
+        PublishDto publishDto = new PublishDto();
+        publishDto.setBookDTO(getBookDTOs().get(0));
+        publishDto.setPublishedCopies(10);
+
+
+        when(bookService.publishBook(publishDto))
+                .thenThrow(new RecordNotFoundException("Book Not Found "+publishDto.getBookDTO().getId()));
+
+        mockMvc.perform(
+                        post(BookController.BASE_URL+"/publish")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(publishDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.valid").value(false))
+                .andExpect(jsonPath("$.message").value("Book Not Found "+publishDto.getBookDTO().getId()))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    void publishBook_shouldReturnRuntime_whenServiceThrowsRuntimeException() throws Exception {
+        PublishDto publishDto = new PublishDto();
+        publishDto.setBookDTO(getBookDTOs().get(0));
+        publishDto.setPublishedCopies(10);
+
+
+        when(bookService.publishBook(publishDto))
+                .thenThrow(new RuntimeException("Not enough copies available"));
+
+        mockMvc.perform(
+                        post(BookController.BASE_URL+"/publish")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(publishDto)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.valid").value(false))
+                .andExpect(jsonPath("$.message").value("Not enough copies available"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
 }

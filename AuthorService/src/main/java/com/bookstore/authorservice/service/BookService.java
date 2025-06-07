@@ -2,6 +2,7 @@ package com.bookstore.authorservice.service;
 
 import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 

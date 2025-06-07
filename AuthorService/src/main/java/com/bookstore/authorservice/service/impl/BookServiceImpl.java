@@ -1,5 +1,6 @@
 package com.bookstore.authorservice.service.impl;
 
+import com.bookstore.authorservice.config.MessageProducer;
 import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.entity.Author;
 import com.bookstore.authorservice.entity.Book;
@@ -12,13 +13,19 @@ import com.bookstore.authorservice.mapper.mappers.BookMapper;
 import com.bookstore.authorservice.repository.AuthorRepository;
 import com.bookstore.authorservice.repository.BookRepository;
 import com.bookstore.authorservice.service.BookService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.bookstore.authorservice.config.KafkaTopics.BOOK_PUBLISHED;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -31,10 +38,15 @@ public class BookServiceImpl implements BookService {
 
     private final BookMapper bookMapper;
 
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, BookMapper bookMapper) {
+    private final MessageProducer messageProducer;
+
+    private ObjectMapper objectMapper;
+
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, BookMapper bookMapper, MessageProducer messageProducer) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.bookMapper = bookMapper;
+        this.messageProducer = messageProducer;
     }
 
     @Override
@@ -125,7 +137,35 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDTO publishBook(PublishDto publishDto) {
-        return null;
+        try{
+            logger.info("Publishing book");
+
+            Book book = bookRepository.findById(publishDto.getBookDTO().getId())
+                    .orElseThrow(() -> new RecordNotFoundException("Book Not Found "+publishDto.getBookDTO().getId()));
+
+            if(publishDto.getPublishedCopies() > book.getTotalCopies()){
+                throw new RuntimeException("Not enough copies available");
+            }
+
+            book.setStatus(Status.PUBLISHED);
+            book.setPublishedAt(LocalDateTime.now());
+            book.setTotalCopies(book.getTotalCopies() - publishDto.getPublishedCopies());
+            Book saved = bookRepository.save(book);
+
+            BookDTO bookDTO = bookMapper.bookToBookDTO(saved);
+            publishDto.setBookDTO(bookDTO);
+            publishDto.setRemainingCopies(bookDTO.getTotalCopies() - publishDto.getPublishedCopies());
+
+            objectMapper.registerModule(new JavaTimeModule());
+            String payload = objectMapper.writeValueAsString(publishDto);
+            logger.info("Published book: {}", payload);
+
+            messageProducer.sendMessage(BOOK_PUBLISHED, payload);
+
+            return bookDTO;
+        }catch (JsonProcessingException e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override

@@ -57,6 +57,7 @@ public class MockData {
         book.setGenre(Genre.FANTASY);
         book.setSynopsis("Synopsis");
         book.setAuthors(List.of(getAuthors().get(0)));
+        book.setTotalCopies(100);
 
         Book book1 = new Book();
         book1.setId(2L);
@@ -66,6 +67,7 @@ public class MockData {
         book1.setGenre(Genre.CHILDREN);
         book1.setSynopsis("QPEO");
         book1.setAuthors(List.of(getAuthors().get(1)));
+        book1.setTotalCopies(100);
 
         return List.of(book, book1);
     }
@@ -79,6 +81,8 @@ public class MockData {
         bookDTO.setGenre(Genre.FANTASY);
         bookDTO.setSynopsis("Synopsis");
         bookDTO.setAuthors(List.of(getAuthorDTOs().get(0)));
+        bookDTO.setTotalCopies(100);
+
 
         BookDTO bookDTO1 = new BookDTO();
         bookDTO1.setId(2L);
@@ -88,6 +92,7 @@ public class MockData {
         bookDTO1.setGenre(Genre.CHILDREN);
         bookDTO1.setSynopsis("QPEO");
         bookDTO1.setAuthors(List.of(getAuthorDTOs().get(1)));
+        bookDTO1.setTotalCopies(100);
 
         return List.of(bookDTO, bookDTO1);
     }
