@@ -3,6 +3,12 @@ package com.bookstore.authorservice.controller;
 import com.bookstore.authorservice.Util.IDataResponse;
 import com.bookstore.authorservice.mapper.dtos.AuthorDTO;
 import com.bookstore.authorservice.service.AuthorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(AuthorController.BASE_URL)
+@Tag(name = "Author Management", description = "APIs for managing authors")
 public class AuthorController {
     public static final String BASE_URL = "/api/authors";
 
@@ -30,6 +37,7 @@ public class AuthorController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new author", description = "Add a new author to the system")
     public IDataResponse<AuthorDTO> createAuthor(@RequestBody AuthorDTO authorDTO) {
         logger.info("Creating author details {}", authorDTO);
         IDataResponse<AuthorDTO> response = new IDataResponse<>();
@@ -40,6 +48,7 @@ public class AuthorController {
     }
 
     @PutMapping(value = "{authorId}")
+    @Operation(summary = "Update a author", description = "Update an existing author's details")
     public IDataResponse<AuthorDTO> updateAuthor(@RequestBody AuthorDTO authorDTO
             , @PathVariable Long authorId) {
         logger.info("Updating author details {}", authorId);
@@ -51,6 +60,7 @@ public class AuthorController {
     }
 
     @GetMapping(value = "{authorId}")
+    @Operation(summary = "Get author by ID", description = "Retrieve a author's details using their ID")
     public IDataResponse<AuthorDTO> getAuthorById(@PathVariable Long authorId) {
         logger.info("Getting author details {}", authorId);
         IDataResponse<AuthorDTO> response = new IDataResponse<>();
@@ -61,6 +71,7 @@ public class AuthorController {
     }
 
     @GetMapping()
+    @Operation(summary = "Get all active authors", description = "Retrieve a list of all authors in the system")
     public IDataResponse<AuthorDTO> getAuthors() {
         logger.info("Getting authors details");
         IDataResponse<AuthorDTO> response = new IDataResponse<>();
@@ -71,6 +82,7 @@ public class AuthorController {
     }
 
     @DeleteMapping(value = "{authorId}")
+    @Operation(summary = "Delete a author", description = "Delete a author from the system using their ID")
     public IDataResponse<AuthorDTO> deleteAuthorById(@PathVariable Long authorId) {
         logger.info("Deleting author details {}", authorId);
         IDataResponse<AuthorDTO> response = new IDataResponse<>();
