@@ -1,0 +1,21 @@
+spring:
+  application:
+    name:AuthorService
+  datasource:
+    url: jdbc:mysql://localhost/book_inventory_schema
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-group-id
+
+server:
+  port: 8200
