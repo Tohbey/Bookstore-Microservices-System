@@ -4,6 +4,8 @@ import com.bookstore.authorservice.Util.IDataResponse;
 import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
 import com.bookstore.authorservice.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(BookController.BASE_URL)
+@Tag(name = "Book Management", description = "APIs for managing books")
 public class BookController {
     public static final String BASE_URL = "/api/books";
 
@@ -31,6 +34,7 @@ public class BookController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new book", description = "Add a new book to the system")
     public IDataResponse<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
         logger.info("Creating book details {}", bookDTO);
         IDataResponse<BookDTO> response = new IDataResponse<>();
@@ -41,6 +45,7 @@ public class BookController {
     }
 
     @PutMapping(value = "{bookId}")
+    @Operation(summary = "Update a book", description = "Update an existing book's details")
     public IDataResponse<BookDTO> updateBook(@RequestBody BookDTO bookDTO, @PathVariable Long bookId) {
         logger.info("Updating book details {}", bookId);
         IDataResponse<BookDTO> response = new IDataResponse<>();
@@ -51,6 +56,7 @@ public class BookController {
     }
 
     @GetMapping(value = "{bookId}")
+    @Operation(summary = "Get book by ID", description = "Retrieve a book's details using their ID")
     public IDataResponse<BookDTO> getBook(@PathVariable Long bookId) {
         logger.info("Retrieving book details for bookId {}", bookId);
         IDataResponse<BookDTO> response = new IDataResponse<>();
@@ -61,6 +67,7 @@ public class BookController {
     }
 
     @PostMapping(value = "all")
+    @Operation(summary = "Get all books", description = "Retrieve a list of all books in the system")
     public IDataResponse<BookDTO> getBooks(@RequestBody List<Long> authorIds) {
         logger.info("Retrieving book details");
         IDataResponse<BookDTO> response = new IDataResponse<>();
@@ -71,6 +78,7 @@ public class BookController {
     }
 
     @PostMapping(value = "publish")
+    @Operation(summary = "Publish a book", description = "Publish book for distributors")
     public IDataResponse<BookDTO> publishBook(@RequestBody PublishDto publishDto) {
         logger.info("Publishing book details");
         IDataResponse<BookDTO> response = new IDataResponse<>();
@@ -81,6 +89,7 @@ public class BookController {
     }
 
     @DeleteMapping(value = "{bookId}")
+    @Operation(summary = "Delete a book", description = "Delete a book from the system using their ID")
     public IDataResponse<BookDTO> deleteBook(@PathVariable Long bookId) {
         logger.info("deleting book details for bookId {}", bookId);
         IDataResponse<BookDTO> response = new IDataResponse<>();
