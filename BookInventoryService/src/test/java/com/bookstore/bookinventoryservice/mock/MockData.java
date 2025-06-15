@@ -2,6 +2,7 @@ package com.bookstore.bookinventoryservice.mock;
 
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
+import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.enums.InventoryStatus;
 import com.bookstore.bookinventoryservice.enums.StoreType;
 import com.bookstore.bookinventoryservice.mapper.dtos.BookStoreDTO;
@@ -76,6 +77,7 @@ public class MockData {
         store1.setName("Central Book Haven");
         store1.setDescription("A central bookstore for all genres.");
         store1.setType(StoreType.PHYSICAL);
+        store1.setFlag(Flag.ENABLED);
         store1.setContactEmail("central@bookhaven.com");
         store1.setContactPhone("+1234567890");
 
@@ -92,6 +94,7 @@ public class MockData {
         store2.setName("Campus Reads");
         store2.setDescription("Serving university students with academic and leisure books.");
         store2.setType(StoreType.PHYSICAL);
+        store2.setFlag(Flag.ENABLED);
         store2.setContactEmail("info@campusreads.com");
         store2.setContactPhone("+9876543210");
 
@@ -117,6 +120,7 @@ public class MockData {
         bookStoreDTO1.setName("Central Book Haven");
         bookStoreDTO1.setDescription("A central bookstore for all genres.");
         bookStoreDTO1.setType(StoreType.PHYSICAL);
+        bookStoreDTO1.setFlag(Flag.ENABLED);
         bookStoreDTO1.setContactEmail("central@bookhaven.com");
         bookStoreDTO1.setContactPhone("+1234567890");
 
@@ -131,6 +135,7 @@ public class MockData {
         BookStoreDTO bookStoreDTO2 = new BookStoreDTO();
         bookStoreDTO2.setId(2L);
         bookStoreDTO2.setName("Campus Reads");
+        bookStoreDTO2.setFlag(Flag.ENABLED);
         bookStoreDTO2.setDescription("Serving university students with academic and leisure books.");
         bookStoreDTO2.setType(StoreType.PHYSICAL);
         bookStoreDTO2.setContactEmail("info@campusreads.com");
