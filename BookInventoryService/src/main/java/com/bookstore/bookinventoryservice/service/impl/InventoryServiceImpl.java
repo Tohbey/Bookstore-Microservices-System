@@ -104,14 +104,20 @@ public class InventoryServiceImpl implements InventoryService {
         List<Inventory> inventories;
         List<InventoryDTO> inventoryDTOS = new ArrayList<>();
 
-        if(Objects.nonNull(storeId)){
+        if(Objects.nonNull(bookId) && Objects.nonNull(storeId)){
+            BookStore bookStore = bookStoreRepository.findById(storeId)
+                    .orElseThrow(() -> new RecordNotFoundException("Book Store Not Found "+storeId));
+
+            inventories = inventoryRepository.findAllByBookStoreAndBookIdAndFlag(bookStore, bookId,flag);
+        }else if(Objects.nonNull(bookId)){
+            inventories = inventoryRepository.findAllByBookIdAndFlag(bookId, flag);
+
+        } else if (Objects.nonNull(storeId) ) {
             BookStore bookStore = bookStoreRepository.findById(storeId)
                     .orElseThrow(() -> new RecordNotFoundException("Book Store Not Found "+storeId));
 
             inventories = inventoryRepository.findAllByBookStoreAndFlag(bookStore, flag);
-        }else if(Objects.nonNull(bookId)){
-            inventories = inventoryRepository.findAllByBookIdAndFlag(bookId, flag);
-        }else{
+        } else{
             inventories = inventoryRepository.findAllByFlag(flag);
         }
 
