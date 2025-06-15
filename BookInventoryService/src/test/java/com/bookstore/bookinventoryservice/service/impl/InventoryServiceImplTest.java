@@ -322,14 +322,36 @@ class InventoryServiceImplTest {
 
     @Test
     void testGetAllInventory_AllByFlag() {
-        when(inventoryRepository.findAllByFlag(Flag.ENABLED)).thenReturn(getInventories());
-        when(inventoryMapper.InventoryToInventoryDTO(getInventories().get(0))).thenReturn(getInventoryDTOs().get(0));
-        when(inventoryMapper.InventoryToInventoryDTO(getInventories().get(1))).thenReturn(getInventoryDTOs().get(1));
+        List<Inventory> inventories = getInventories();
+        List<InventoryDTO> inventoryDTOs = getInventoryDTOs();
+
+        when(inventoryRepository.findAllByFlag(Flag.ENABLED)).thenReturn(inventories);
+        when(inventoryMapper.InventoryToInventoryDTO(inventories.get(0))).thenReturn(inventoryDTOs.get(0));
+        when(inventoryMapper.InventoryToInventoryDTO(inventories.get(1))).thenReturn(inventoryDTOs.get(1));
 
         List<InventoryDTO> result = inventoryService.getAllInventory(Flag.ENABLED, null, null);
 
         assertEquals(2, result.size());
         verify(inventoryRepository).findAllByFlag(Flag.ENABLED);
+    }
+
+    @Test
+    void testGetAllInventory_AllByFlagAndBookIdAndBookStore() {
+        Long storeId = 1L;
+        Long bookId = 2L;
+        BookStore bookStore = getBookStores().get(0);
+        List<Inventory> inventories = getInventories();
+        List<InventoryDTO> inventoryDTOs = getInventoryDTOs();
+
+        when(bookStoreRepository.findById(storeId)).thenReturn(Optional.of(bookStore));
+        when(inventoryRepository.findAllByBookStoreAndBookIdAndFlag(bookStore, bookId, Flag.ENABLED)).thenReturn(inventories);
+        when(inventoryMapper.InventoryToInventoryDTO(inventories.get(0))).thenReturn(inventoryDTOs.get(0));
+        when(inventoryMapper.InventoryToInventoryDTO(inventories.get(1))).thenReturn(inventoryDTOs.get(1));
+
+        List<InventoryDTO> result = inventoryService.getAllInventory(Flag.ENABLED, storeId, bookId);
+
+        assertEquals(2, result.size());
+        verify(inventoryRepository).findAllByBookStoreAndBookIdAndFlag(bookStore, bookId, Flag.ENABLED);
     }
 
     @Test

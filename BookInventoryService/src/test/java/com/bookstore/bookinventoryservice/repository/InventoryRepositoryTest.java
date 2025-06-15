@@ -133,6 +133,13 @@ class InventoryRepositoryTest {
         assertEquals(inventory2, inventories.get(1));
         assertEquals(inventory3, inventories.get(2));
         assertEquals(inventory4, inventories.get(3));
+    }
 
+    @Test
+    void findAllByBookStoreAndBookIdAndFlag() {
+        List<Inventory> inventories = inventoryRepository.findAllByBookStoreAndBookIdAndFlag(bookStore, 1L, Flag.ENABLED);
+        assertNotNull(inventories);
+        assertEquals(1, inventories.size());
+        assertEquals(inventory1, inventories.get(0));;
     }
 }
