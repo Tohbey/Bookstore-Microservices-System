@@ -8,6 +8,8 @@ import com.bookstore.bookinventoryservice.mapper.mappers.InventoryTransactionMap
 import com.bookstore.bookinventoryservice.repository.InventoryRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryTransactionRepository;
 import com.bookstore.bookinventoryservice.service.InventoryTransactionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +29,7 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
+    Logger logger = LoggerFactory.getLogger(InventoryTransactionServiceImpl.class);
 
     public InventoryTransactionServiceImpl(InventoryTransactionRepository inventoryTransactionRepository, InventoryTransactionMapper inventoryTransactionMapper, InventoryRepository inventoryRepository) {
         this.inventoryTransactionRepository = inventoryTransactionRepository;
@@ -37,6 +40,7 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
 
     @Override
     public InventoryTransactionDTO create(InventoryTransactionDTO inventoryTransactionDTO) {
+        logger.info("Creating a new inventory transaction");
         Inventory inventory = inventoryRepository.findById(inventoryTransactionDTO.getInventory().getId())
                 .orElseThrow(() -> new RecordNotFoundException("Transaction Not Found "+inventoryTransactionDTO.getInventory().getId()));
 
@@ -51,6 +55,8 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
 
     @Override
     public List<InventoryTransactionDTO> viewTransactionHistory(Long inventoryId) {
+        logger.info("Getting the list of transactions by inventory id {}",inventoryId);
+
         List<InventoryTransactionDTO> inventoryTransactionDTOS = new ArrayList<>();
         Inventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RecordNotFoundException("Inventory Not Found "+inventoryId));
@@ -66,6 +72,7 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
 
     @Override
     public InventoryTransactionDTO getTransaction(Long transactionId) {
+        logger.info("Getting the transaction by inventory id {}",transactionId);
         InventoryTransaction inventoryTransaction = inventoryTransactionRepository.findById(transactionId)
                 .orElseThrow(() -> new RecordNotFoundException("Transaction Not Found "+transactionId));
 
