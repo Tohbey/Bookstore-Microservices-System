@@ -2,11 +2,14 @@ package com.bookstore.bookinventoryservice.mock;
 
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
+import com.bookstore.bookinventoryservice.entity.InventoryTransaction;
 import com.bookstore.bookinventoryservice.enums.Flag;
+import com.bookstore.bookinventoryservice.enums.InventoryAction;
 import com.bookstore.bookinventoryservice.enums.InventoryStatus;
 import com.bookstore.bookinventoryservice.enums.StoreType;
 import com.bookstore.bookinventoryservice.mapper.dtos.BookStoreDTO;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
+import com.bookstore.bookinventoryservice.mapper.dtos.InventoryTransactionDTO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -153,6 +156,66 @@ public class MockData {
         bookStoreDTOS.add(bookStoreDTO2);
 
         return bookStoreDTOS;
+    }
+
+    public static List<InventoryTransaction> getInventoryTransactions() {
+        List<Inventory> inventories = getInventories();
+        List<InventoryTransaction> transactions = new ArrayList<>();
+
+        InventoryTransaction txn1 = new InventoryTransaction();
+        txn1.setId(1L);
+        txn1.setInventory(inventories.get(0));
+        txn1.setTransactionRef("TXN-202406150001");
+        txn1.setBookId(inventories.get(0).getBookId());
+        txn1.setUserId(101L);
+        txn1.setQuantity(5);
+        txn1.setReason("New stock added");
+        txn1.setAction(InventoryAction.STOCKED);
+
+        InventoryTransaction txn2 = new InventoryTransaction();
+        txn2.setId(2L);
+        txn2.setInventory(inventories.get(1));
+        txn2.setTransactionRef("TXN-202406150002");
+        txn2.setBookId(inventories.get(1).getBookId());
+        txn2.setUserId(102L);
+        txn2.setQuantity(2);
+        txn2.setReason("Damaged copy removed");
+        txn2.setAction(InventoryAction.DAMAGED);
+
+        transactions.add(txn1);
+        transactions.add(txn2);
+
+        return transactions;
+    }
+
+    public static List<InventoryTransactionDTO> getInventoryTransactionDTOs() {
+        List<InventoryDTO> inventoryDTOs = getInventoryDTOs();
+        List<InventoryTransactionDTO> dtos = new ArrayList<>();
+
+        InventoryTransactionDTO dto1 = new InventoryTransactionDTO();
+        dto1.setId(1L);
+        dto1.setInventory(inventoryDTOs.get(0));
+        dto1.setTransactionRef("TXN-202406150001");
+        dto1.setBookId(inventoryDTOs.get(0).getBookId());
+        dto1.setUserId(101L);
+        dto1.setQuantity(5);
+        dto1.setReason("New stock added");
+        dto1.setAction(InventoryAction.STOCKED);
+
+        InventoryTransactionDTO dto2 = new InventoryTransactionDTO();
+        dto2.setId(2L);
+        dto2.setInventory(inventoryDTOs.get(1));
+        dto2.setTransactionRef("TXN-202406150002");
+        dto2.setBookId(inventoryDTOs.get(1).getBookId());
+        dto2.setUserId(102L);
+        dto2.setQuantity(2);
+        dto2.setReason("Damaged copy removed");
+        dto2.setAction(InventoryAction.DAMAGED);
+
+        dtos.add(dto1);
+        dtos.add(dto2);
+
+        return dtos;
     }
 
 }

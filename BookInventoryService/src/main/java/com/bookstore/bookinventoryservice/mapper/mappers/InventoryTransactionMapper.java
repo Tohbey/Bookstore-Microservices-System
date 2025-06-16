@@ -11,5 +11,5 @@ public interface InventoryTransactionMapper {
 
     InventoryTransactionDTO inventoryTransactionToInventoryTransactionDTO(InventoryTransaction inventoryTransaction);
 
-    InventoryTransaction inventoryTransactionToInventoryTransactionDTO(InventoryTransactionDTO inventoryTransactionDTO);
+    InventoryTransaction inventoryTransactionDTOToInventoryTransaction(InventoryTransactionDTO inventoryTransactionDTO);
 }
