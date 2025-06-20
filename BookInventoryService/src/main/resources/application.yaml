@@ -3,8 +3,8 @@ spring:
     name:AuthorService
   datasource:
     url: jdbc:mysql://localhost/book_inventory_schema
-    username:
-    password:
+    username: root
+    password: macbookair
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true

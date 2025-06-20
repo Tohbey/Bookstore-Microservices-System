@@ -1,9 +1,12 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
+import com.bookstore.bookinventoryservice.dtos.BookDTO;
+import com.bookstore.bookinventoryservice.dtos.PublishEvent;
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
 import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.enums.InventoryStatus;
+import com.bookstore.bookinventoryservice.exception.RecordAlreadyExistException;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.BookStoreDTO;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
@@ -12,6 +15,7 @@ import com.bookstore.bookinventoryservice.repository.BookStoreRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -24,6 +28,7 @@ import static com.bookstore.bookinventoryservice.mock.MockData.getInventories;
 import static com.bookstore.bookinventoryservice.mock.MockData.getInventoryDTOs;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -106,7 +111,7 @@ class InventoryServiceImplTest {
                 .thenReturn(Optional.of(existingInventory));
 
         // When & Then
-        RecordNotFoundException ex = assertThrows(RecordNotFoundException.class,
+        RecordAlreadyExistException ex = assertThrows(RecordAlreadyExistException.class,
                 () -> inventoryService.createInventory(inventoryDTO));
 
         assertEquals("Inventory already exists for this book", ex.getMessage());
@@ -365,5 +370,36 @@ class InventoryServiceImplTest {
 
         assertEquals("Book Store Not Found 2", exception.getMessage());
         verify(bookStoreRepository).findById(2L);
+    }
+
+    @Test
+    void handleBookPublishedEvent_shouldCreateInventoryForAllEnabledBookstores() {
+        // Given
+        Long bookId = 123L;
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setId(bookId);
+        PublishEvent event = new PublishEvent();
+        event.setBookDTO(bookDTO);
+        List<BookStore> bookStores = getBookStores();
+
+        when(bookStoreRepository.findAllByFlag(Flag.ENABLED)).thenReturn(bookStores);
+
+        // When
+        inventoryService.handleBookPublishedEvent(event);
+
+        // Then
+        ArgumentCaptor<Inventory> inventoryCaptor = ArgumentCaptor.forClass(Inventory.class);
+        verify(inventoryRepository, times(2)).save(inventoryCaptor.capture());
+
+        List<Inventory> savedInventories = inventoryCaptor.getAllValues();
+        assertEquals(2, savedInventories.size());
+
+        for (Inventory inventory : savedInventories) {
+            assertEquals(bookId, inventory.getBookId());
+            assertEquals(InventoryStatus.OUT_OF_STOCK, inventory.getStatus());
+            assertEquals(Flag.ENABLED, inventory.getFlag());
+            assertNotNull(inventory.getBookStore());
+            assertTrue(bookStores.contains(inventory.getBookStore()));
+        }
     }
 }
