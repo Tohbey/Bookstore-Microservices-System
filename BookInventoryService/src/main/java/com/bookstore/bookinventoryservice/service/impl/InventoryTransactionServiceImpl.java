@@ -1,10 +1,16 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
+import com.bookstore.bookinventoryservice.dtos.BorrowAndReturnEvent;
+import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
 import com.bookstore.bookinventoryservice.entity.InventoryTransaction;
+import com.bookstore.bookinventoryservice.enums.Flag;
+import com.bookstore.bookinventoryservice.enums.InventoryAction;
+import com.bookstore.bookinventoryservice.enums.InventoryStatus;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryTransactionDTO;
 import com.bookstore.bookinventoryservice.mapper.mappers.InventoryTransactionMapper;
+import com.bookstore.bookinventoryservice.repository.BookStoreRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryTransactionRepository;
 import com.bookstore.bookinventoryservice.service.InventoryTransactionService;
@@ -27,14 +33,19 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
 
     private final InventoryRepository inventoryRepository;
 
+    private final BookStoreRepository bookStoreRepository;
+
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     Logger logger = LoggerFactory.getLogger(InventoryTransactionServiceImpl.class);
 
-    public InventoryTransactionServiceImpl(InventoryTransactionRepository inventoryTransactionRepository, InventoryTransactionMapper inventoryTransactionMapper, InventoryRepository inventoryRepository) {
+    public InventoryTransactionServiceImpl(InventoryTransactionRepository inventoryTransactionRepository,
+                                           InventoryTransactionMapper inventoryTransactionMapper,
+                                           InventoryRepository inventoryRepository, BookStoreRepository bookStoreRepository) {
         this.inventoryTransactionRepository = inventoryTransactionRepository;
         this.inventoryTransactionMapper = inventoryTransactionMapper;
         this.inventoryRepository = inventoryRepository;
+        this.bookStoreRepository = bookStoreRepository;
     }
 
 
@@ -42,7 +53,7 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
     public InventoryTransactionDTO create(InventoryTransactionDTO inventoryTransactionDTO) {
         logger.info("Creating a new inventory transaction");
         Inventory inventory = inventoryRepository.findById(inventoryTransactionDTO.getInventory().getId())
-                .orElseThrow(() -> new RecordNotFoundException("Transaction Not Found "+inventoryTransactionDTO.getInventory().getId()));
+                .orElseThrow(() -> new RecordNotFoundException("Inventory Not Found "+inventoryTransactionDTO.getInventory().getId()));
 
         InventoryTransaction transaction = inventoryTransactionMapper.inventoryTransactionDTOToInventoryTransaction(inventoryTransactionDTO);
         transaction.setInventory(inventory);
@@ -77,6 +88,49 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
                 .orElseThrow(() -> new RecordNotFoundException("Transaction Not Found "+transactionId));
 
         return inventoryTransactionMapper.inventoryTransactionToInventoryTransactionDTO(inventoryTransaction);
+    }
+
+    @Override
+    public void handleBorrowAndReturnEvent(BorrowAndReturnEvent event) {
+        BookStore bookStore = bookStoreRepository.findById(event.getStoreId())
+                .orElseThrow(() -> new RecordNotFoundException("Book store Not Found "+event.getStoreId()));
+
+        Inventory inventory = inventoryRepository.findById(event.getInventoryId())
+                .orElseThrow(() -> new RecordNotFoundException("Inventory Not Found "+event.getStoreId()));
+
+        if (event.getAction() == InventoryAction.BORROWED) {
+            if (inventory.getAvailableCopies() < event.getQuantity()) {
+                throw new RuntimeException("Not enough available copies to borrow.");
+            }
+            inventory.setAvailableCopies(inventory.getAvailableCopies() - event.getQuantity());
+
+        } else if (event.getAction() == InventoryAction.RETURNED) {
+            int maxReturnable = inventory.getTotalCopies() - inventory.getAvailableCopies();
+            if (event.getQuantity() > maxReturnable) {
+                throw new RuntimeException("Cannot return more books than were borrowed.");
+            }
+            inventory.setAvailableCopies(inventory.getAvailableCopies() + event.getQuantity());
+        }
+
+        inventory.setStatus(inventory.getAvailableCopies() == 0
+                ? InventoryStatus.OUT_OF_STOCK
+                : InventoryStatus.ACTIVE);
+
+        inventoryRepository.save(inventory);
+
+        InventoryTransaction transaction = new InventoryTransaction();
+        transaction.setTransactionRef(generateTransactionRef());
+        transaction.setInventory(inventory);
+        transaction.setFlag(Flag.ENABLED);
+        transaction.setBookId(event.getBookId());
+        transaction.setUserId(event.getUserId());
+        transaction.setAction(event.getAction());
+        transaction.setQuantity(event.getQuantity());
+        transaction.setReason(event.getReason());
+
+        inventoryTransactionRepository.save(transaction);
+
+        logger.info("Inventory updated and transaction recorded for bookId: {}", event.getBookId());
     }
 
 

@@ -1,5 +1,6 @@
 package com.bookstore.bookinventoryservice.service;
 
+import com.bookstore.bookinventoryservice.dtos.PublishEvent;
 import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
 
@@ -16,4 +17,6 @@ public interface InventoryService {
     InventoryDTO getInventoryById(Long inventoryId);
 
     List<InventoryDTO> getAllInventory(Flag flag, Long storeId, Long bookId);
+
+    void handleBookPublishedEvent(PublishEvent publishEvent);
 }

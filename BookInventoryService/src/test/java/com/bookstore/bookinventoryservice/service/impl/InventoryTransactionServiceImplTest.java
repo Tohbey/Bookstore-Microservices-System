@@ -1,10 +1,14 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
+import com.bookstore.bookinventoryservice.dtos.BorrowAndReturnEvent;
+import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
 import com.bookstore.bookinventoryservice.entity.InventoryTransaction;
+import com.bookstore.bookinventoryservice.enums.InventoryAction;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryTransactionDTO;
 import com.bookstore.bookinventoryservice.mapper.mappers.InventoryTransactionMapper;
+import com.bookstore.bookinventoryservice.repository.BookStoreRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryTransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +26,7 @@ import static com.bookstore.bookinventoryservice.mock.MockData.getInventoryTrans
 import static com.bookstore.bookinventoryservice.mock.MockData.getInventoryTransactions;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -37,6 +42,9 @@ class InventoryTransactionServiceImplTest {
 
     @Mock
     private InventoryRepository inventoryRepository;
+
+    @Mock
+    private BookStoreRepository bookStoreRepository;
 
     @InjectMocks
     private InventoryTransactionServiceImpl inventoryTransactionService;
@@ -88,7 +96,7 @@ class InventoryTransactionServiceImplTest {
                 () -> inventoryTransactionService.create(inventoryTransactionDTO)
         );
 
-        assertEquals("Transaction Not Found " + inventoryTransactionDTO.getInventory().getId(), exception.getMessage());
+        assertEquals("Inventory Not Found " + inventoryTransactionDTO.getInventory().getId(), exception.getMessage());
         verify(inventoryRepository).findById(inventoryTransactionDTO.getInventory().getId());
         verifyNoInteractions(inventoryTransactionRepository);
         verifyNoInteractions(inventoryTransactionMapper);
@@ -172,5 +180,106 @@ class InventoryTransactionServiceImplTest {
         );
 
         assertEquals("Transaction Not Found " + id, exception.getMessage());
+    }
+
+    @Test
+    void handleBorrowEvent_shouldSucceed_whenEnoughCopiesAvailable() {
+        // Given
+        BorrowAndReturnEvent event = getBorrowEvent(InventoryAction.BORROWED, 2);
+
+        Inventory inventory = getInventories().get(0);
+
+        when(bookStoreRepository.findById(event.getStoreId()))
+                .thenReturn(Optional.of(new BookStore()));
+
+        when(inventoryRepository.findById(event.getInventoryId()))
+                .thenReturn(Optional.of(inventory));
+
+        int expectedCount = inventory.getAvailableCopies() - event.getQuantity();
+
+        // When
+        inventoryTransactionService.handleBorrowAndReturnEvent(event);
+
+        // Then
+        verify(inventoryRepository).save(any(Inventory.class));
+        verify(inventoryTransactionRepository).save(any(InventoryTransaction.class));
+        assertEquals(expectedCount, inventory.getAvailableCopies());
+    }
+
+    @Test
+    void handleBorrowEvent_shouldFail_whenNotEnoughCopiesAvailable() {
+        // Given
+        BorrowAndReturnEvent event = getBorrowEvent(InventoryAction.BORROWED, 40);
+
+        Inventory inventory = getInventories().get(0);
+
+        when(bookStoreRepository.findById(event.getStoreId()))
+                .thenReturn(Optional.of(new BookStore()));
+        when(inventoryRepository.findById(event.getInventoryId()))
+                .thenReturn(Optional.of(inventory));
+
+        // When & Then
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            inventoryTransactionService.handleBorrowAndReturnEvent(event);
+        });
+
+        assertEquals("Not enough available copies to borrow.", ex.getMessage());
+        verify(inventoryRepository, never()).save(any());
+        verify(inventoryTransactionRepository, never()).save(any());
+    }
+
+    @Test
+    void handleReturnEvent_shouldSucceed_whenReturnIsValid() {
+        // Given
+        BorrowAndReturnEvent event = getBorrowEvent(InventoryAction.RETURNED, 2);
+        Inventory inventory = getInventories().get(0);
+        when(bookStoreRepository.findById(event.getStoreId()))
+                .thenReturn(Optional.of(new BookStore()));
+        when(inventoryRepository.findById(event.getInventoryId()))
+                .thenReturn(Optional.of(inventory));
+
+        int expectedCount = inventory.getAvailableCopies() + event.getQuantity();
+
+        // When
+        inventoryTransactionService.handleBorrowAndReturnEvent(event);
+
+        // Then
+        verify(inventoryRepository).save(any());
+        verify(inventoryTransactionRepository).save(any());
+        assertEquals(expectedCount, inventory.getAvailableCopies());
+    }
+
+    @Test
+    void handleReturnEvent_shouldFail_whenReturningMoreThanBorrowed() {
+        // Given
+        BorrowAndReturnEvent event = getBorrowEvent(InventoryAction.RETURNED, 40);
+
+        Inventory inventory = getInventories().get(0);
+
+        when(bookStoreRepository.findById(event.getStoreId()))
+                .thenReturn(Optional.of(new BookStore()));
+        when(inventoryRepository.findById(event.getInventoryId()))
+                .thenReturn(Optional.of(inventory));
+
+        // When & Then
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            inventoryTransactionService.handleBorrowAndReturnEvent(event);
+        });
+
+        assertEquals("Cannot return more books than were borrowed.", ex.getMessage());
+        verify(inventoryRepository, never()).save(any());
+        verify(inventoryTransactionRepository, never()).save(any());
+    }
+
+    private BorrowAndReturnEvent getBorrowEvent(InventoryAction action, int quantity) {
+        BorrowAndReturnEvent event = new BorrowAndReturnEvent();
+        event.setStoreId(1L);
+        event.setInventoryId(10L);
+        event.setBookId(100L);
+        event.setUserId(200L);
+        event.setAction(action);
+        event.setQuantity(quantity);
+        event.setReason("Test reason");
+        return event;
     }
 }

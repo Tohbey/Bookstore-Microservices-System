@@ -1,9 +1,11 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
+import com.bookstore.bookinventoryservice.dtos.PublishEvent;
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
 import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.enums.InventoryStatus;
+import com.bookstore.bookinventoryservice.exception.RecordAlreadyExistException;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
 import com.bookstore.bookinventoryservice.mapper.mappers.InventoryMapper;
@@ -45,7 +47,7 @@ public class InventoryServiceImpl implements InventoryService {
         Optional<Inventory> existingInventory = inventoryRepository.findByBookIdAndFlag(inventoryDTO.getBookId(), Flag.ENABLED);
 
         if(existingInventory.isPresent() && existingInventory.get().getStatus().equals(InventoryStatus.ACTIVE)){
-            throw new RecordNotFoundException("Inventory already exists for this book");
+            throw new RecordAlreadyExistException("Inventory already exists for this book");
         }
 
         Inventory inventory = inventoryMapper.inventoryDTOToInventory(inventoryDTO);
@@ -126,5 +128,22 @@ public class InventoryServiceImpl implements InventoryService {
         }
 
         return inventoryDTOS;
+    }
+
+    @Override
+    public void handleBookPublishedEvent(PublishEvent event) {
+        logger.info("Received book.published event: {}", event.getBookDTO().getId());
+
+        List<BookStore> bookStores = bookStoreRepository.findAllByFlag(Flag.ENABLED);
+
+        for(BookStore bookStore : bookStores){
+            Inventory inventory = new Inventory();
+            inventory.setBookStore(bookStore);
+            inventory.setFlag(Flag.ENABLED);
+            inventory.setBookId(event.getBookDTO().getId());
+            inventory.setStatus(InventoryStatus.OUT_OF_STOCK);
+
+            inventoryRepository.save(inventory);
+        }
     }
 }
