@@ -3,13 +3,13 @@ package com.bookstore.bookinventoryservice.mock;
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
 import com.bookstore.bookinventoryservice.entity.InventoryTransaction;
-import com.bookstore.bookinventoryservice.enums.Flag;
-import com.bookstore.bookinventoryservice.enums.InventoryAction;
-import com.bookstore.bookinventoryservice.enums.InventoryStatus;
-import com.bookstore.bookinventoryservice.enums.StoreType;
 import com.bookstore.bookinventoryservice.mapper.dtos.BookStoreDTO;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryTransactionDTO;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.InventoryAction;
+import com.bookstore.bookstorestarter.enums.InventoryStatus;
+import com.bookstore.bookstorestarter.enums.StoreType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

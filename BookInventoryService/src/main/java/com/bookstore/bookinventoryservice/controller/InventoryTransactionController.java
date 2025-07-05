@@ -1,8 +1,8 @@
 package com.bookstore.bookinventoryservice.controller;
 
-import com.bookstore.bookinventoryservice.Util.IDataResponse;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryTransactionDTO;
 import com.bookstore.bookinventoryservice.service.InventoryTransactionService;
+import com.bookstore.bookstorestarter.Util.IDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;

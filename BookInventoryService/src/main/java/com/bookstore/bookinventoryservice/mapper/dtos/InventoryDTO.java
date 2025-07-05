@@ -1,6 +1,6 @@
 package com.bookstore.bookinventoryservice.mapper.dtos;
 
-import com.bookstore.bookinventoryservice.enums.InventoryStatus;
+import com.bookstore.bookstorestarter.enums.InventoryStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

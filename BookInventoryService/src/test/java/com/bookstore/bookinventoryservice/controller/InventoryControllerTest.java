@@ -1,10 +1,10 @@
 package com.bookstore.bookinventoryservice.controller;
 
-import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.exception.RecordAlreadyExistException;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
 import com.bookstore.bookinventoryservice.service.InventoryService;
+import com.bookstore.bookstorestarter.enums.Flag;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

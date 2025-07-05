@@ -1,7 +1,7 @@
 package com.bookstore.bookinventoryservice.entity;
 
 import com.bookstore.bookinventoryservice.entity.core.FlagableAuditableEntity;
-import com.bookstore.bookinventoryservice.enums.InventoryAction;
+import com.bookstore.bookstorestarter.enums.InventoryAction;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

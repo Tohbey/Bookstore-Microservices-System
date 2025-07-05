@@ -1,16 +1,16 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
-import com.bookstore.bookinventoryservice.dtos.BorrowAndReturnEvent;
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
 import com.bookstore.bookinventoryservice.entity.InventoryTransaction;
-import com.bookstore.bookinventoryservice.enums.InventoryAction;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryTransactionDTO;
 import com.bookstore.bookinventoryservice.mapper.mappers.InventoryTransactionMapper;
 import com.bookstore.bookinventoryservice.repository.BookStoreRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryTransactionRepository;
+import com.bookstore.bookstorestarter.dtos.BorrowAndReturnEvent;
+import com.bookstore.bookstorestarter.enums.InventoryAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
