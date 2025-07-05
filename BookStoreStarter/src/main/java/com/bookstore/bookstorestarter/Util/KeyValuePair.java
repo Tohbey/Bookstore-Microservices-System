@@ -1,4 +1,4 @@
-package com.bookstore.authorservice.Util;
+package com.bookstore.bookstorestarter.Util;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

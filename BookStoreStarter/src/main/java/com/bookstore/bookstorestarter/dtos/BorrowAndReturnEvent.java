@@ -1,6 +1,6 @@
-package com.bookstore.bookinventoryservice.dtos;
+package com.bookstore.bookstorestarter.dtos;
 
-import com.bookstore.bookinventoryservice.enums.InventoryAction;
+import com.bookstore.bookstorestarter.enums.InventoryAction;
 import lombok.Data;
 
 @Data

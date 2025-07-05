@@ -1,6 +1,6 @@
-package com.bookstore.bookinventoryservice.Util;
+package com.bookstore.bookstorestarter.Util;
 
-import com.bookstore.bookinventoryservice.model.DataResponse;
+import com.bookstore.bookstorestarter.model.DataResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

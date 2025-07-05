@@ -1,10 +1,10 @@
-package com.bookstore.bookinventoryservice.dtos;
+package com.bookstore.bookstorestarter.dtos;
 
 import lombok.Data;
 
 @Data
 public class PublishEvent {
-    private BookDTO bookDTO;
+    private BaseBookDTO bookDTO;
     private Integer publishedCopies;
     private Integer remainingCopies;
 }

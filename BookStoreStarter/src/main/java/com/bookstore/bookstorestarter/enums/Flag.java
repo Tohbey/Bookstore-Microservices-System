@@ -1,4 +1,4 @@
-package com.bookstore.authorservice.enums;
+package com.bookstore.bookstorestarter.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

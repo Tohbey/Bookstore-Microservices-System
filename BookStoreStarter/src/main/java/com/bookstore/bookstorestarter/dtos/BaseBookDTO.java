@@ -1,13 +1,12 @@
-package com.bookstore.bookinventoryservice.dtos;
+package com.bookstore.bookstorestarter.dtos;
 
-import com.bookstore.bookinventoryservice.mapper.dtos.BaseDTO;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class BookDTO extends BaseDTO {
+public class BaseBookDTO extends BaseDTO {
     private String title;
     private String synopsis;
     private LocalDateTime publishedAt;

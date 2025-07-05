@@ -1,4 +1,4 @@
-package com.bookstore.authorservice.model;
+package com.bookstore.bookstorestarter.model;
 
 import java.util.List;
 

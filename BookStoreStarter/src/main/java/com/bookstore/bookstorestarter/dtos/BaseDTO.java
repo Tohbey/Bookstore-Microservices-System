@@ -1,6 +1,6 @@
-package com.bookstore.authorservice.mapper.dtos;
+package com.bookstore.bookstorestarter.dtos;
 
-import com.bookstore.authorservice.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Flag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
