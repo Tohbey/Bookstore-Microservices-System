@@ -1,4 +1,4 @@
-package com.bookstore.authorservice.enums;
+package com.bookstore.bookstorestarter.enums;
 
 public enum Status {
     DRAFT,          // Book is being written, not yet published

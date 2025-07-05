@@ -1,6 +1,6 @@
-package com.bookstore.authorservice.entity.core;
+package com.bookstore.bookstorestarter.Util;
 
-import com.bookstore.authorservice.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Flag;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

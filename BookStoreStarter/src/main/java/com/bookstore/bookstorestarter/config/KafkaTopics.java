@@ -1,4 +1,4 @@
-package com.bookstore.bookinventoryservice.config;
+package com.bookstore.bookstorestarter.config;
 
 public class KafkaTopics {
 
