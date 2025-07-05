@@ -1,11 +1,8 @@
 package com.bookstore.authorservice.service.impl;
 
 import com.bookstore.authorservice.config.MessageProducer;
-import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.entity.Author;
 import com.bookstore.authorservice.entity.Book;
-import com.bookstore.authorservice.enums.Flag;
-import com.bookstore.authorservice.enums.Status;
 import com.bookstore.authorservice.exception.RecordNotFoundException;
 import com.bookstore.authorservice.mapper.dtos.AuthorDTO;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
@@ -13,6 +10,10 @@ import com.bookstore.authorservice.mapper.mappers.BookMapper;
 import com.bookstore.authorservice.repository.AuthorRepository;
 import com.bookstore.authorservice.repository.BookRepository;
 import com.bookstore.authorservice.service.BookService;
+import com.bookstore.bookstorestarter.config.KafkaTopics;
+import com.bookstore.bookstorestarter.dtos.PublishDto;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Status;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.bookstore.authorservice.config.KafkaTopics.BOOK_PUBLISHED;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -136,7 +136,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDTO publishBook(PublishDto publishDto) {
+    public BookDTO publishBook(PublishDto<BookDTO> publishDto) {
         try{
             logger.info("Publishing book");
 
@@ -160,7 +160,7 @@ public class BookServiceImpl implements BookService {
             String payload = objectMapper.writeValueAsString(publishDto);
             logger.info("Published book: {}", payload);
 
-            messageProducer.sendMessage(BOOK_PUBLISHED, payload);
+            messageProducer.sendMessage(KafkaTopics.BOOK_PUBLISHED, payload);
 
             return bookDTO;
         }catch (JsonProcessingException e){

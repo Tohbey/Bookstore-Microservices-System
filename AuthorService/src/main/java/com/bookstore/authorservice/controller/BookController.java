@@ -1,9 +1,9 @@
 package com.bookstore.authorservice.controller;
 
-import com.bookstore.authorservice.Util.IDataResponse;
-import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
 import com.bookstore.authorservice.service.BookService;
+import com.bookstore.bookstorestarter.Util.IDataResponse;
+import com.bookstore.bookstorestarter.dtos.PublishDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -79,7 +79,7 @@ public class BookController {
 
     @PostMapping(value = "publish")
     @Operation(summary = "Publish a book", description = "Publish book for distributors")
-    public IDataResponse<BookDTO> publishBook(@RequestBody PublishDto publishDto) {
+    public IDataResponse<BookDTO> publishBook(@RequestBody PublishDto<BookDTO> publishDto) {
         logger.info("Publishing book details");
         IDataResponse<BookDTO> response = new IDataResponse<>();
         response.setData(List.of(bookService.publishBook(publishDto)));

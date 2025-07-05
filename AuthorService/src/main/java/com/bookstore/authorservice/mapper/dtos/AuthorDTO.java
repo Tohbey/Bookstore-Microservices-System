@@ -1,5 +1,6 @@
 package com.bookstore.authorservice.mapper.dtos;
 
+import com.bookstore.bookstorestarter.dtos.BaseDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

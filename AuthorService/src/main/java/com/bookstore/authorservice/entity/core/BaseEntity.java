@@ -1,6 +1,6 @@
 package com.bookstore.authorservice.entity.core;
 
-import com.bookstore.authorservice.model.Model;
+import com.bookstore.bookstorestarter.model.Model;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

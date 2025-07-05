@@ -1,8 +1,8 @@
 package com.bookstore.authorservice.entity;
 
 import com.bookstore.authorservice.entity.core.FlagableAuditableEntity;
-import com.bookstore.authorservice.enums.Genre;
-import com.bookstore.authorservice.enums.Status;
+import com.bookstore.bookstorestarter.enums.Genre;
+import com.bookstore.bookstorestarter.enums.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

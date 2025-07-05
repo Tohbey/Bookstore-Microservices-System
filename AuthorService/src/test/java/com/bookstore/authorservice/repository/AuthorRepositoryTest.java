@@ -1,7 +1,7 @@
 package com.bookstore.authorservice.repository;
 
 import com.bookstore.authorservice.entity.Author;
-import com.bookstore.authorservice.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Flag;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

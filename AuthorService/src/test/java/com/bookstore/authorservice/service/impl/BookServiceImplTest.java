@@ -1,15 +1,15 @@
 package com.bookstore.authorservice.service.impl;
 
 import com.bookstore.authorservice.config.MessageProducer;
-import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.entity.Book;
-import com.bookstore.authorservice.enums.Flag;
-import com.bookstore.authorservice.enums.Status;
 import com.bookstore.authorservice.exception.RecordNotFoundException;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
 import com.bookstore.authorservice.mapper.mappers.BookMapper;
 import com.bookstore.authorservice.repository.AuthorRepository;
 import com.bookstore.authorservice.repository.BookRepository;
+import com.bookstore.bookstorestarter.dtos.PublishDto;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Status;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.bookstore.authorservice.config.KafkaTopics.BOOK_PUBLISHED;
 import static com.bookstore.authorservice.mock.MockData.getAuthorDTOs;
 import static com.bookstore.authorservice.mock.MockData.getAuthors;
 import static com.bookstore.authorservice.mock.MockData.getBookDTOs;
 import static com.bookstore.authorservice.mock.MockData.getBooks;
+import static com.bookstore.bookstorestarter.config.KafkaTopics.BOOK_PUBLISHED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;

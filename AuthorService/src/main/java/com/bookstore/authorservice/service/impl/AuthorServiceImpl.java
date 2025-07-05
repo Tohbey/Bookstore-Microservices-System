@@ -1,13 +1,13 @@
 package com.bookstore.authorservice.service.impl;
 
 import com.bookstore.authorservice.entity.Author;
-import com.bookstore.authorservice.enums.Flag;
 import com.bookstore.authorservice.exception.RecordAlreadyExistException;
 import com.bookstore.authorservice.exception.RecordNotFoundException;
 import com.bookstore.authorservice.mapper.dtos.AuthorDTO;
 import com.bookstore.authorservice.mapper.mappers.AuthorMapper;
 import com.bookstore.authorservice.repository.AuthorRepository;
 import com.bookstore.authorservice.service.AuthorService;
+import com.bookstore.bookstorestarter.enums.Flag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,6 +49,7 @@ public class AuthorServiceImpl implements AuthorService {
         }
 
         Author author = authorMapper.authorDTOToAuthor(authorDTO);
+        author.setFlag(Flag.ENABLED);
         author = authorRepository.save(author);
 
         logger.info("Author created");
