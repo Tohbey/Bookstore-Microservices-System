@@ -2,7 +2,7 @@ package com.bookstore.authorservice.repository;
 
 import com.bookstore.authorservice.entity.Author;
 import com.bookstore.authorservice.entity.Book;
-import com.bookstore.authorservice.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Flag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

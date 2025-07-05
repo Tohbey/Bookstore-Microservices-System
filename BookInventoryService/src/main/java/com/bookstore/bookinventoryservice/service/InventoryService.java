@@ -1,8 +1,8 @@
 package com.bookstore.bookinventoryservice.service;
 
-import com.bookstore.bookinventoryservice.dtos.PublishEvent;
-import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
+import com.bookstore.bookstorestarter.dtos.PublishEvent;
+import com.bookstore.bookstorestarter.enums.Flag;
 
 import java.util.List;
 

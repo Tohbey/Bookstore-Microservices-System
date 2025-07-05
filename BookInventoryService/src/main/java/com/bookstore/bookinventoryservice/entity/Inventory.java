@@ -1,7 +1,8 @@
 package com.bookstore.bookinventoryservice.entity;
 
 import com.bookstore.bookinventoryservice.entity.core.FlagableAuditableEntity;
-import com.bookstore.bookinventoryservice.enums.InventoryStatus;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.InventoryStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,5 +39,4 @@ public class Inventory extends FlagableAuditableEntity {
 
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InventoryTransaction> transactions = new ArrayList<>();
-
 }

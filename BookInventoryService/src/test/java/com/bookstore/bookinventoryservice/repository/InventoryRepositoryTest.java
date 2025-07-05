@@ -2,8 +2,8 @@ package com.bookstore.bookinventoryservice.repository;
 
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
-import com.bookstore.bookinventoryservice.enums.Flag;
-import com.bookstore.bookinventoryservice.enums.InventoryStatus;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.InventoryStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

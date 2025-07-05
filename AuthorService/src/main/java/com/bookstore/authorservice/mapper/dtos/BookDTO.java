@@ -1,23 +1,15 @@
 package com.bookstore.authorservice.mapper.dtos;
 
-import com.bookstore.authorservice.enums.Genre;
-import com.bookstore.authorservice.enums.Status;
+import com.bookstore.bookstorestarter.dtos.BaseBookDTO;
+import com.bookstore.bookstorestarter.enums.Genre;
+import com.bookstore.bookstorestarter.enums.Status;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class BookDTO extends BaseDTO {
-    private String title;
+public class BookDTO extends BaseBookDTO {
     private Genre genre;
-    private String synopsis;
     private Status status;
     private List<AuthorDTO> authors;
-    private LocalDateTime publishedAt;
-    private String isbn;
-    private String edition;
-    private Integer totalCopies;
-    private BigDecimal suggestedRetailPrice;
 }

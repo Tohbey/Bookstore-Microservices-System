@@ -1,6 +1,6 @@
 package com.bookstore.bookinventoryservice.mapper.dtos;
 
-import com.bookstore.bookinventoryservice.enums.StoreType;
+import com.bookstore.bookstorestarter.enums.StoreType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.Data;

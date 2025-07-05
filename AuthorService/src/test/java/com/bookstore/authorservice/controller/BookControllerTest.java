@@ -1,10 +1,10 @@
 package com.bookstore.authorservice.controller;
 
-import com.bookstore.authorservice.dtos.PublishDto;
-import com.bookstore.authorservice.enums.Flag;
 import com.bookstore.authorservice.exception.RecordNotFoundException;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
 import com.bookstore.authorservice.service.BookService;
+import com.bookstore.bookstorestarter.dtos.PublishDto;
+import com.bookstore.bookstorestarter.enums.Flag;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -261,7 +261,7 @@ class BookControllerTest {
 
     @Test
     void publishBook_shouldReturnSuccess() throws Exception {
-        PublishDto publishDto = new PublishDto();
+        PublishDto<BookDTO> publishDto = new PublishDto<BookDTO>();
         publishDto.setBookDTO(getBookDTOs().get(0));
         publishDto.setPublishedCopies(10);
 
@@ -279,7 +279,7 @@ class BookControllerTest {
 
     @Test
     void publishBook_shouldReturnNotFound_whenServiceThrowsRecordNotFoundException() throws Exception {
-        PublishDto publishDto = new PublishDto();
+        PublishDto<BookDTO> publishDto = new PublishDto<BookDTO>();
         publishDto.setBookDTO(getBookDTOs().get(0));
         publishDto.setPublishedCopies(10);
 
@@ -299,7 +299,7 @@ class BookControllerTest {
 
     @Test
     void publishBook_shouldReturnRuntime_whenServiceThrowsRuntimeException() throws Exception {
-        PublishDto publishDto = new PublishDto();
+        PublishDto<BookDTO> publishDto = new PublishDto<BookDTO>();
         publishDto.setBookDTO(getBookDTOs().get(0));
         publishDto.setPublishedCopies(10);
 

@@ -1,9 +1,9 @@
 package com.bookstore.bookinventoryservice.config;
 
-import com.bookstore.bookinventoryservice.dtos.BorrowAndReturnEvent;
-import com.bookstore.bookinventoryservice.dtos.PublishEvent;
 import com.bookstore.bookinventoryservice.service.InventoryService;
 import com.bookstore.bookinventoryservice.service.InventoryTransactionService;
+import com.bookstore.bookstorestarter.dtos.BorrowAndReturnEvent;
+import com.bookstore.bookstorestarter.dtos.PublishEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import static com.bookstore.bookinventoryservice.config.KafkaTopics.BOOK_PUBLISHED;
-import static com.bookstore.bookinventoryservice.config.KafkaTopics.USER_BORROWED_BOOK;
-import static com.bookstore.bookinventoryservice.config.KafkaTopics.USER_RETURNED_BOOK;
+import static com.bookstore.bookstorestarter.config.KafkaTopics.BOOK_PUBLISHED;
+import static com.bookstore.bookstorestarter.config.KafkaTopics.USER_BORROWED_BOOK;
+import static com.bookstore.bookstorestarter.config.KafkaTopics.USER_RETURNED_BOOK;
 
 @Component
 public class MessageConsumer {

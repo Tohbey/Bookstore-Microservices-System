@@ -1,10 +1,10 @@
 package com.bookstore.authorservice.controller;
 
-import com.bookstore.authorservice.enums.Flag;
 import com.bookstore.authorservice.exception.RecordAlreadyExistException;
 import com.bookstore.authorservice.exception.RecordNotFoundException;
 import com.bookstore.authorservice.mapper.dtos.AuthorDTO;
 import com.bookstore.authorservice.service.AuthorService;
+import com.bookstore.bookstorestarter.enums.Flag;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

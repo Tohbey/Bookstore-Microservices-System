@@ -1,8 +1,7 @@
 package com.bookstore.authorservice.service;
 
-import com.bookstore.authorservice.dtos.PublishDto;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.bookstore.bookstorestarter.dtos.PublishDto;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface BookService {
 
     BookDTO getBookById(Long bookId);
 
-    BookDTO publishBook(PublishDto publishDto);
+    BookDTO publishBook(PublishDto<BookDTO> publishDto);
 
     BookDTO deleteBook(Long bookId);
 }

@@ -1,7 +1,7 @@
 package com.bookstore.bookinventoryservice.model;
 
 
-import com.bookstore.bookinventoryservice.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Flag;
 
 public interface Flagable {
     Flag getFlag();

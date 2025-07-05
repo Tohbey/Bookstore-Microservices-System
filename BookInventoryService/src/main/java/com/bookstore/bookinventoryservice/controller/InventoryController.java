@@ -1,9 +1,9 @@
 package com.bookstore.bookinventoryservice.controller;
 
-import com.bookstore.bookinventoryservice.Util.IDataResponse;
-import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
 import com.bookstore.bookinventoryservice.service.InventoryService;
+import com.bookstore.bookstorestarter.Util.IDataResponse;
+import com.bookstore.bookstorestarter.enums.Flag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;

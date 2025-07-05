@@ -1,12 +1,12 @@
 package com.bookstore.authorservice.service.impl;
 
 import com.bookstore.authorservice.entity.Author;
-import com.bookstore.authorservice.enums.Flag;
 import com.bookstore.authorservice.exception.RecordAlreadyExistException;
 import com.bookstore.authorservice.exception.RecordNotFoundException;
 import com.bookstore.authorservice.mapper.dtos.AuthorDTO;
 import com.bookstore.authorservice.mapper.mappers.AuthorMapper;
 import com.bookstore.authorservice.repository.AuthorRepository;
+import com.bookstore.bookstorestarter.enums.Flag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

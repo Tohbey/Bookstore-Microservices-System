@@ -5,8 +5,6 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -34,7 +32,6 @@ public class AuditableEntity extends BaseEntity {
     @Setter
     @CreatedDate
     @Column(name = "created_date", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     @JsonIgnore
     @Audited
     private LocalDateTime createdDate;
@@ -52,7 +49,6 @@ public class AuditableEntity extends BaseEntity {
     @LastModifiedDate
     @Basic(optional = true)
     @Column(name = "last_modified_date", insertable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     @JsonIgnore
     @Audited
     private LocalDateTime lastModifiedDate;

@@ -2,9 +2,9 @@ package com.bookstore.bookinventoryservice.repository;
 
 import com.bookstore.bookinventoryservice.entity.Inventory;
 import com.bookstore.bookinventoryservice.entity.InventoryTransaction;
-import com.bookstore.bookinventoryservice.enums.Flag;
-import com.bookstore.bookinventoryservice.enums.InventoryAction;
-import com.bookstore.bookinventoryservice.enums.InventoryStatus;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.InventoryAction;
+import com.bookstore.bookstorestarter.enums.InventoryStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,8 @@
 package com.bookstore.authorservice.entity.core;
 
-import com.bookstore.authorservice.enums.Flag;
-import com.bookstore.authorservice.model.Flagable;
+import com.bookstore.bookstorestarter.Util.JpaConverter;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.model.Flagable;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

@@ -1,12 +1,12 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
 import com.bookstore.bookinventoryservice.entity.BookStore;
-import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.BookStoreDTO;
 import com.bookstore.bookinventoryservice.mapper.mappers.BookStoreMapper;
 import com.bookstore.bookinventoryservice.repository.BookStoreRepository;
 import com.bookstore.bookinventoryservice.service.BookStoreService;
+import com.bookstore.bookstorestarter.enums.Flag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

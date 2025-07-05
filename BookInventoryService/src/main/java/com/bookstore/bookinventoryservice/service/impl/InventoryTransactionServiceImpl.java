@@ -1,12 +1,8 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
-import com.bookstore.bookinventoryservice.dtos.BorrowAndReturnEvent;
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
 import com.bookstore.bookinventoryservice.entity.InventoryTransaction;
-import com.bookstore.bookinventoryservice.enums.Flag;
-import com.bookstore.bookinventoryservice.enums.InventoryAction;
-import com.bookstore.bookinventoryservice.enums.InventoryStatus;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryTransactionDTO;
 import com.bookstore.bookinventoryservice.mapper.mappers.InventoryTransactionMapper;
@@ -14,6 +10,10 @@ import com.bookstore.bookinventoryservice.repository.BookStoreRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryTransactionRepository;
 import com.bookstore.bookinventoryservice.service.InventoryTransactionService;
+import com.bookstore.bookstorestarter.dtos.BorrowAndReturnEvent;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.InventoryAction;
+import com.bookstore.bookstorestarter.enums.InventoryStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

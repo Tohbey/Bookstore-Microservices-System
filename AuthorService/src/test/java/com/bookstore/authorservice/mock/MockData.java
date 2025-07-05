@@ -2,11 +2,11 @@ package com.bookstore.authorservice.mock;
 
 import com.bookstore.authorservice.entity.Author;
 import com.bookstore.authorservice.entity.Book;
-import com.bookstore.authorservice.enums.Flag;
-import com.bookstore.authorservice.enums.Genre;
-import com.bookstore.authorservice.enums.Status;
 import com.bookstore.authorservice.mapper.dtos.AuthorDTO;
 import com.bookstore.authorservice.mapper.dtos.BookDTO;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Genre;
+import com.bookstore.bookstorestarter.enums.Status;
 
 import java.util.List;
 

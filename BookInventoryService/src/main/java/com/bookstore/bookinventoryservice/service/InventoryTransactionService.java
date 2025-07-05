@@ -1,7 +1,7 @@
 package com.bookstore.bookinventoryservice.service;
 
-import com.bookstore.bookinventoryservice.dtos.BorrowAndReturnEvent;
 import com.bookstore.bookinventoryservice.mapper.dtos.InventoryTransactionDTO;
+import com.bookstore.bookstorestarter.dtos.BorrowAndReturnEvent;
 
 import java.util.List;
 

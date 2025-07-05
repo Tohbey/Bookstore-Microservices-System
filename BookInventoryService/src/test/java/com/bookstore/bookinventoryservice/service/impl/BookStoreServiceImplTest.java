@@ -1,11 +1,11 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
 import com.bookstore.bookinventoryservice.entity.BookStore;
-import com.bookstore.bookinventoryservice.enums.Flag;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.BookStoreDTO;
 import com.bookstore.bookinventoryservice.mapper.mappers.BookStoreMapper;
 import com.bookstore.bookinventoryservice.repository.BookStoreRepository;
+import com.bookstore.bookstorestarter.enums.Flag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -2,9 +2,9 @@ package com.bookstore.authorservice.repository;
 
 import com.bookstore.authorservice.entity.Author;
 import com.bookstore.authorservice.entity.Book;
-import com.bookstore.authorservice.enums.Flag;
-import com.bookstore.authorservice.enums.Genre;
-import com.bookstore.authorservice.enums.Status;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.Genre;
+import com.bookstore.bookstorestarter.enums.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

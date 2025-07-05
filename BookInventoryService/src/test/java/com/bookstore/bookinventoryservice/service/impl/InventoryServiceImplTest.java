@@ -1,11 +1,7 @@
 package com.bookstore.bookinventoryservice.service.impl;
 
-import com.bookstore.bookinventoryservice.dtos.BookDTO;
-import com.bookstore.bookinventoryservice.dtos.PublishEvent;
 import com.bookstore.bookinventoryservice.entity.BookStore;
 import com.bookstore.bookinventoryservice.entity.Inventory;
-import com.bookstore.bookinventoryservice.enums.Flag;
-import com.bookstore.bookinventoryservice.enums.InventoryStatus;
 import com.bookstore.bookinventoryservice.exception.RecordAlreadyExistException;
 import com.bookstore.bookinventoryservice.exception.RecordNotFoundException;
 import com.bookstore.bookinventoryservice.mapper.dtos.BookStoreDTO;
@@ -13,6 +9,10 @@ import com.bookstore.bookinventoryservice.mapper.dtos.InventoryDTO;
 import com.bookstore.bookinventoryservice.mapper.mappers.InventoryMapper;
 import com.bookstore.bookinventoryservice.repository.BookStoreRepository;
 import com.bookstore.bookinventoryservice.repository.InventoryRepository;
+import com.bookstore.bookstorestarter.dtos.BaseBookDTO;
+import com.bookstore.bookstorestarter.dtos.PublishEvent;
+import com.bookstore.bookstorestarter.enums.Flag;
+import com.bookstore.bookstorestarter.enums.InventoryStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -376,7 +376,7 @@ class InventoryServiceImplTest {
     void handleBookPublishedEvent_shouldCreateInventoryForAllEnabledBookstores() {
         // Given
         Long bookId = 123L;
-        BookDTO bookDTO = new BookDTO();
+        BaseBookDTO bookDTO = new BaseBookDTO();
         bookDTO.setId(bookId);
         PublishEvent event = new PublishEvent();
         event.setBookDTO(bookDTO);
